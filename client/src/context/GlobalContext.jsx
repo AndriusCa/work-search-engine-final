@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const initialContext = {
   loginStatus: false,
@@ -9,9 +9,31 @@ export const initialContext = {
 
 export const GlobalContext = createContext(initialContext); 
 
+
 export const ContextWrapper = (props) => {
   const [loginStatus, setLoginStatus] = useState(initialContext.loginStatus);
   const [role, setRole] = useState(initialContext.role);
+
+//  useEffect(() => {
+//    fetch("http://localhost:3001/api/login", {
+//      method: "GET",
+//      headers: {
+//        "Content-Type": "application/json",
+//        Accept: "application/json",
+//      },
+//      credentials: "include",
+//    })
+//      .then((res) => res.json())
+//      .then((data) => {
+//        if (data.status === "ok" && data.user) {
+//          setLoginStatus(true)
+//          setRole(data.user.role)
+//         //  setFullname(data.user.fullname)
+//         //  setEmail(data.user.email)
+//        }
+//      })
+//      .catch(console.error)
+//  }, [])
 
   function updateLoginStatus(status) {
     setLoginStatus(status);

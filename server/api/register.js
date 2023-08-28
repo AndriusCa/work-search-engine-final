@@ -1,5 +1,6 @@
 import express from "express";
 import { connection } from "../setupDb.js";
+import { hash } from "../lib/hash.js";
 
 export const register = express.Router();
 
@@ -17,17 +18,17 @@ register.post("/", async (req, res) => {
         errors: [
           {
             input: "email",
-            msg: "User with such email already exists.",
+            msg: "Šis El. paštas jau užimtas - pasirink kitą.",
           },
         ],
-      });
+      })
     }
 
     const insertQuery = `INSERT INTO users (fullname, email, password_hash) VALUES (?, ?, ?)`;
     const insertRes = await connection.execute(insertQuery, [
       fullname,
       email,
-      password,
+      hash(password)
     ]);
     const insertResObject = insertRes[0];
 

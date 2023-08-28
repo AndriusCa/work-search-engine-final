@@ -5,6 +5,7 @@ import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Page404 } from "./pages/Page404";
+import { List } from "./pages/List";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
+            <Route path="/list" element={<List />}></Route>
           </Route>
           {/* <Route Component={UserLayout}>
             <Route path='/dashboard' element={}></Route>

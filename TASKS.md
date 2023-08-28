@@ -23,14 +23,14 @@ Pardavineja automobilius.
         - [✔]  pages:
             - [✔]  pagrindinis
             - [✔]  404
-- []  register:
-    - []  react page
+- [✔]  register:
+    - [✔]  react page
     - []  form + validacija + fetch
     - []  server api + validacija
     - []  DB: user table
     - []  redirect -> login page
-- []  login:
-    - []  react page
+- [✔]  login:
+    - [✔]  react page
     - []  form + validacija + fetch
     - []  server api + validacija
     - []  DB: user table + token table
