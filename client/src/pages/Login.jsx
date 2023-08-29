@@ -1,26 +1,26 @@
 import { Link, useNavigate } from "react-router-dom";
 import style from "./Auth.module.css";
 import { useContext, useState } from "react";
-// import { UserContext } from "../context/UserContext"
 
 export function Login() {
-  // const ctx = useContext(UserContext)
 
-  const navigate = useNavigate()
-  const [formErr, setFormErr] = useState("")
-  const [email, setEmail] = useState("")
-  const [emailErr, setEmailErr] = useState("")
-  const [pass, setPass] = useState("")
-  const [passErr, setPassErr] = useState("")
+  const navigate = useNavigate();
+  const [formErr, setFormErr] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailErr, setEmailErr] = useState("");
+  const [pass, setPass] = useState("");
+  const [passErr, setPassErr] = useState("");
 
   function isValidEmail(e) {
     const { value } = e.target;
     const minSize = 6;
 
     if (value.length < minSize) {
-      return setEmailErr(`Email per trumpas. Minimum ${minSize} simboliu.`)
+      return setEmailErr(
+        `El. paštas per trumpas. Minimum ${minSize} simboliai.`
+      )
     }
-    return setEmailErr("")
+    return setEmailErr("");
   }
 
   function isValidPass(e) {
@@ -28,9 +28,11 @@ export function Login() {
     const minSize = 6;
 
     if (value.length < minSize) {
-      return setPassErr(`Pass per trumpas. Minimum ${minSize} simboliu.`)
+      return setPassErr(
+        `Slaptažodis per trumpas. Minimum ${minSize} simboliai.`
+      )
     }
-    return setPassErr("")
+    return setPassErr("");
   }
 
   function handleSubmit(e) {
@@ -54,17 +56,16 @@ export function Login() {
           setFormErr(data.msg)
         }
         if (data.status === "ok") {
-          // ctx.loginUser()
           navigate("/dashboard")
         }
       })
-      .catch((err) => console.error(err))
-  }
-
+      .catch((err) => console.error(err));
+  };
+  
   return (
     <div className={`form-signin w-100 m-auto ${style.formSignin}`}>
       <form onSubmit={handleSubmit}>
-        <h1 className="h1 mb-3 fw-normal">Please log in</h1>
+        <h1 className="h1 mb-3 fw-normal">Prisijungti prie paskyros</h1>
 
         {formErr && (
           <div
@@ -80,7 +81,7 @@ export function Login() {
               aria-label="Close"
             ></button>
           </div>
-        )}
+        )};
 
         <div className="form-floating mb-3">
           <input
@@ -89,9 +90,10 @@ export function Login() {
             type="email"
             id="email"
             value={email}
+            autoComplete="email"
             className={`form-control ${emailErr ? "is-invalid" : ""}`}
           />
-          <label htmlFor="email">Email address</label>
+          <label htmlFor="email">El. paštas</label>
           <div className="invalid-feedback">{emailErr}</div>
         </div>
         <div className="form-floating mb-3">
@@ -101,9 +103,10 @@ export function Login() {
             type="password"
             id="password"
             value={pass}
+            autoComplete="off"
             className={`form-control ${passErr ? "is-invalid" : ""}`}
           />
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Slaptažodis</label>
           <div className="invalid-feedback">{passErr}</div>
         </div>
 
@@ -123,7 +126,7 @@ export function Login() {
         </button>
         <p className="my-3 text-center text-body-secondary">or</p>
         <Link to="/register" className="btn btn-outline-primary w-100 py-2">
-          Register
+          Registruotis
         </Link>
       </form>
     </div>
