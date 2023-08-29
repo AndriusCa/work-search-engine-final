@@ -81,7 +81,7 @@ export function Login() {
               aria-label="Close"
             ></button>
           </div>
-        )};
+        )}
 
         <div className="form-floating mb-3">
           <input

@@ -1,10 +1,10 @@
-import express from "express"
-import cors from "cors"
-import helmet from "helmet"
-import cookieParser from "cookie-parser"
-import bodyParser from "body-parser"
-import { SERVER_PORT } from "./env.js"
-import { api } from "./api/api.js"
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import { SERVER_PORT } from "./env.js";
+import { api } from "./api/api.js";
 
 const app = express();
 
@@ -30,16 +30,16 @@ app.use(express.static('public'));
 app.use('/api', api);
 
 app.get("*", (_req, res) => {
-  return res.status(200).json({ msg: "What are you looking for? 👀" })
+  return res.status(200).json({ msg: "What are you looking for? 👀" });
 });
 
 app.use((_req, res, _next) => {
-  return res.status(404).json({ msg: "Sorry can't find that!" })
+  return res.status(404).json({ msg: "Sorry can't find that!" });
 });
 
 app.use((err, _req, res, _next) => {
   console.error(err.stack)
-  return res.status(500).json({ msg: "Something broke!" })
+  return res.status(500).json({ msg: "Something broke!" });
 });
 
-app.listen(SERVER_PORT)
+app.listen(SERVER_PORT);

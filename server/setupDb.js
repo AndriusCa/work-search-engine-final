@@ -1,6 +1,8 @@
 import mysql from "mysql2/promise";
 import { DB_DATABASE, DB_HOST, DB_PASS, DB_USER } from "./env.js";
-import { hash } from "./lib/hash.js"
+import { hash } from "./lib/hash.js";
+
+const DATABASE_RESET = false;
 
 async function setupDb() {
   // Susikuriame DB, jei nera
@@ -8,22 +10,29 @@ async function setupDb() {
     host: DB_HOST,
     user: DB_USER,
     password: DB_PASS,
-  })
+  });
 
-  // await connection.execute(`DROP DATABASE IF EXISTS \`${DB_DATABASE}\``)
-  await connection.execute(`CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\``)
-  connection.query(`USE \`${DB_DATABASE}\``)
+  if (DATABASE_RESET) {
+    await connection.execute(`DROP DATABASE IF EXISTS \`${DB_DATABASE}\``);
+  }
+    await connection.execute(`CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\``);
+  connection.query(`USE \`${DB_DATABASE}\``);
 
-  // Susikuriame lenteles
-  await rolesTable(connection)
-  await usersTable(connection)
-  await tokensTable(connection)
 
-  // Uzpildome informacija
-    await generateRoles(connection);
-    await generateUsers(connection)
+  if (DATABASE_RESET) {
+    // Susikuriame lenteles
+    await rolesTable(connection);
+    await usersTable(connection);
+    await tokensTable(connection);
+    
+    // Uzpildome informacija
+    if (DATABASE_RESET) {
+      await generateRoles(connection);
+      await generateUsers(connection);
+    }
 
-  return connection;
+    return connection;
+  }
 }
 
 async function usersTable(db) {

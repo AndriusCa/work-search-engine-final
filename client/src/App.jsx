@@ -6,6 +6,7 @@ import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Page404 } from "./pages/Page404";
 import { List } from "./pages/List";
+import { Terms } from "./pages/Terms";
 
 
 function App() {
@@ -19,9 +20,9 @@ function App() {
             <Route path="/register" element={<Register />}></Route>
             <Route path="/list" element={<List />}></Route>
           </Route>
-          {/* <Route Component={UserLayout}>
-            <Route path='/dashboard' element={}></Route>
-          </Route> */}
+          <Route >
+            <Route path='/terms' element={<Terms />}></Route>
+          </Route>
           <Route Component={PublicLayout}>
             <Route path="*" element={<Page404 />}></Route>
           </Route>

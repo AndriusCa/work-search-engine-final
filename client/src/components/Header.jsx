@@ -13,8 +13,8 @@ export function Header() {
 
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <li>
-                <Link to="/home" className="nav-link px-2 link-secondary">
-                  Home
+                <Link to="/" className="nav-link px-2 link-secondary">
+                  Pagrindinis
                 </Link>
               </li>
               <li>
@@ -33,19 +33,20 @@ export function Header() {
               role="search"
             >
               <input
-              type="search"
-              className="form-control"
-              placeholder="Search..."
-              aria-label="Search"
-            />
+                type="search"
+                className="form-control"
+                placeholder="Paieška..."
+                aria-label="Search"
+                autoComplete="on"
+              />
             </form>
             <div className="dropdown text-end">
               <div className="text-end">
                 <Link to="Login" className="btn btn-primary me-2">
-                  Login
+                  Prisijungti
                 </Link>
                 <Link to="Register" className="btn btn-primary">
-                  Register
+                  Registruotis
                 </Link>
               </div>
             </div>

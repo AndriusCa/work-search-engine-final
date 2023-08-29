@@ -1,12 +1,12 @@
-import express from "express"
-import { connection } from "../setupDb.js"
+import express from "express";
+import { connection } from "../setupDb.js";
 
 export const logout = express.Router()
 
 logout.get("/", async (req, res) => {
-  const { jobToken } = req.cookies
+  const { jobsToken } = req.cookies
 
-  if (!jobToken) {
+  if (!jobsToken) {
     return res.status(200).json({
       status: "ok",
       msg: "You are already log out.",
@@ -15,10 +15,10 @@ logout.get("/", async (req, res) => {
 
   try {
     const selectQuery = `DELETE FROM tokens WHERE token = ?;`
-    const selectRes = await connection.execute(selectQuery, [jobToken]);
+    const selectRes = await connection.execute(selectQuery, [jobsToken])
 
     const cookie = [
-      "jobToken=" + jobToken,
+      "jobsToken=" + jobsToken,
       "path=/",
       "domain=localhost",
       "max-age=-1",
@@ -36,8 +36,8 @@ logout.get("/", async (req, res) => {
       msg: "POST: LOGIN API - server error.",
     })
   }
-});
+})
 
 logout.use((req, res, next) => {
   return res.status(404).json({ msg: 'Unsupported "Logout" method' })
-});
+})

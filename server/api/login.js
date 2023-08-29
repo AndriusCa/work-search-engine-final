@@ -1,122 +1,118 @@
 import { randomUUID } from "crypto";
 import express from "express";
 import { connection } from "../setupDb.js";
-import { hash } from "../lib/hash.js"
+import { hash } from "../lib/hash.js";
 
-const login = express.Router()
-
-login.get("/", async (req, res) => {
-  const { jobsToken } = req.cookies;
-
-  console.log(jobsToken);
-
-  if (!jobsToken) {
-    return res.sendStatus(400)
-  }
- 
-
-  try {
-    const selectQuery = `SELECT * FROM tokens WHERE token=?;`;
-    const [selectRes] = await connection.execute(selectQuery, [jobsToken]);
-    const [token] = selectRes;
-
-    if (selectRes.length === 1) {
-      const cookieExpirationInDays = 1
-      const createDate = new Date(token.created)
-      const now = new Date()
-      const daysDiff = (now - createDate) / 1000 / 86400
-      if (daysDiff > cookieExpirationInDays) {
-        return res.sendStatus(400)
-      }
-
-      return res.sendStatus(200)
-    }
-
-    return res.sendStatus(400)
-  } catch (error) {
-    return res.status(500).json({ msg: "Server error" })
-  }
-})
+export const login = express.Router()
 
 login.post("/", async (req, res) => {
-  const { email, password } = req.body;
-
-  const minEmailSize = 6
-  const minPasswordSize = 6
-
-  const errors = []
-  if (typeof email !== "string" || email.length < minEmailSize) {
-    errors.push({
-      input: "email",
-      msg: "Blogas email. Per trumpas.",
-    })
-  }
-  if (typeof password !== "string" || password.length < minPasswordSize) {
-    errors.push({
-      input: "password",
-      msg: "Blogas password. Per trumpas.",
-    })
-  }
-
-  if (errors.length > 0) {
-    return res.status(409).json({
-      status: "err-list",
-      errors,
-    })
-  }
+  const { email, password } = req.body
 
   try {
-    const selectQuery = `SELECT * FROM users WHERE email = ? AND password_hash = ?;`;
-    const [selectRes] = await connection.execute(selectQuery, [email, hash(password)])
+    const selectQuery = `SELECT users.id, users.fullname, users.email, users.is_blocked, roles.role FROM users
+                            INNER JOIN roles ON roles.id = users.role_id
+                            WHERE email = ? AND password_hash = ?;`
+    const selectRes = await connection.execute(selectQuery, [
+      email,
+      hash(password),
+    ])
+    const users = selectRes[0]
 
-
-    if (selectRes.length !== 1) {
+    if (users.length === 0) {
       return res.status(200).json({
         status: "err",
-        msg: "Login credentials does not match.",
-      });
+        msg: "User with such email and password does not exist.",
+      })
+    }
+
+    const userObj = users[0]
+
+    if (userObj.is_blocked) {
+      return res.status(200).json({
+        status: "err",
+        msg: "User is blocked.",
+      })
     }
 
     const token = randomUUID()
-    const insertQuery = `INSERT INTO tokens 
-                                (token, user_id)
-                            VALUES 
-                                (?, ?);`;
-    const [insertRes] = await connection.execute(insertQuery, [
-      token,
-      selectRes[0].id,
-    ])
 
-    if (insertRes.affectedRows !== 1) {
-      return res.status(500).json({
-        status: "err",
-        msg: "Server error.",
-      });
-    }
+    const insertQuery = `INSERT INTO tokens (token, user_id) VALUES (?, ?)`
+    const insertRes = await connection.execute(insertQuery, [token, userObj.id])
+    const insertResObject = insertRes[0]
 
-    return res
-      .status(200)
-      .set({
-        "Set-Cookie": [
-          "jobToken=" + token,
-          "path=/",
-          "domain=localhost",
-          "max-age=86400",
-          // 'Secure',
-          "SameSite=Lax",
-          "HttpOnly",
-        ].join("; "),
-      })
-      .json({
+    if (insertResObject.insertId > 0) {
+      const cookie = [
+        "jobsToken=" + token,
+        "path=/",
+        "domain=localhost",
+        "max-age=86400",
+        // 'Secure',
+        "SameSite=Lax",
+        "HttpOnly",
+      ]
+
+      delete userObj.id
+
+      return res.status(200).set("Set-Cookie", cookie.join("; ")).json({
         status: "ok",
-        msg: "Login success",
+        msg: "Token created",
+        user: userObj,
       })
+    } else {
+      return res.status(400).json({
+        status: "err",
+        msg: "Token could not be created",
+      })
+    }
   } catch (error) {
     return res.status(500).json({
       status: "err",
-      msg: "Server error",
+      msg: "POST: LOGIN API - server error.",
     })
   }
-});
+})
 
-export { login }
+login.get("/", async (req, res) => {
+  const { jobsToken } = req.cookies
+
+  if (!jobsToken) {
+    return res.status(200).json({
+      status: "err",
+      msg: "You are nor logged in.",
+    })
+  }
+
+  try {
+    const selectQuery = `SELECT users.fullname, users.email, roles.role FROM tokens
+                            INNER JOIN users ON tokens.user_id = users.id
+                            INNER JOIN roles ON users.role_id = roles.id
+                            WHERE token = ?;`
+    const selectRes = await connection.execute(selectQuery, [jobsToken])
+    const users = selectRes[0]
+
+    if (users.length === 0) {
+      const cookie = [
+        "jobsToken=" + jobsToken,
+        "path=/",
+        "domain=localhost",
+        "max-age=-1",
+        // 'Secure',
+        "SameSite=Lax",
+        "HttpOnly",
+      ]
+      return res.status(200).set("Set-Cookie", cookie.join("; ")).json({
+        status: "ok",
+        msg: "Session deleted",
+      })
+    }
+
+    return res.status(200).json({
+      status: "ok",
+      user: users[0],
+    })
+  } catch (error) {}
+})
+
+login.use((req, res, next) => {
+  return res.status(404).json({ msg: 'Unsupported "Login" method' })
+})

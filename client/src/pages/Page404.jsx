@@ -11,7 +11,7 @@ export function Page404() {
             <p className="lead mb-4">Puslapis kurio ieškojote neegzistuoja.</p>
             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
               <Link to="/" className="btn btn-primary btn-lg px-4 gap-3">
-                ATGAL
+                Pagrindinis puslapis
               </Link>
             </div>
           </div>
