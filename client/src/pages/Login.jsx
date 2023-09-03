@@ -1,8 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import style from "./Auth.module.css";
 import { useContext, useState } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 
 export function Login() {
+  const { updateEmail, updateFullname, updateLoginStatus, updateRole } =
+    useContext(GlobalContext);
 
   const navigate = useNavigate();
   const [formErr, setFormErr] = useState("");
@@ -34,6 +37,14 @@ export function Login() {
     }
     return setPassErr("");
   }
+  
+    function emailUpdateHandler(e) {
+      setEmail(e.target.value)
+    }
+
+    function passwordUpdateHandler(e) {
+      setPass(e.target.value)
+    }
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -56,6 +67,10 @@ export function Login() {
           setFormErr(data.msg)
         }
         if (data.status === "ok") {
+          updateLoginStatus(true)
+          updateEmail(data.user.email)
+          updateFullname(data.user.fullname)
+          updateRole(data.user.role)
           navigate("/dashboard")
         }
       })
@@ -85,7 +100,7 @@ export function Login() {
 
         <div className="form-floating mb-3">
           <input
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={emailUpdateHandler}
             onBlur={isValidEmail}
             type="email"
             id="email"
@@ -98,7 +113,7 @@ export function Login() {
         </div>
         <div className="form-floating mb-3">
           <input
-            onChange={(e) => setPass(e.target.value)}
+            onChange={passwordUpdateHandler}
             onBlur={isValidPass}
             type="password"
             id="password"
@@ -130,5 +145,5 @@ export function Login() {
         </Link>
       </form>
     </div>
-  );
+  )
 }
