@@ -5,10 +5,11 @@ import { hash } from "../lib/hash.js";
 export const register = express.Router()
 
 register.post("/", async (req, res) => {
-  const { fullname, email, password } = req.body
+  const { fullname, email, password } = req.body;
+  console.log(fullname, email, password)
 
   try {
-    const selectQuery = `SELECT * FROM users WHERE email = ?;`
+    const selectQuery = `SELECT * FROM users WHERE email = ?;`;
     const selectRes = await connection.execute(selectQuery, [email])
     const users = selectRes[0]
 
@@ -21,7 +22,7 @@ register.post("/", async (req, res) => {
             msg: "User with such email already exists.",
           },
         ],
-      })
+      });
     }
 
     const insertQuery = `INSERT INTO users (fullname, email, password_hash) VALUES (?, ?, ?)`
@@ -29,8 +30,9 @@ register.post("/", async (req, res) => {
       fullname,
       email,
       hash(password),
-    ])
-    const insertResObject = insertRes[0]
+    ]);
+    
+    const insertResObject = insertRes[0];
 
     if (insertResObject.insertId > 0) {
       return res.status(200).json({
@@ -44,6 +46,7 @@ register.post("/", async (req, res) => {
       })
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: "err",
       msg: "POST: REGISTER API - server error.",
