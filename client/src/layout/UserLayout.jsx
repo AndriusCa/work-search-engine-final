@@ -6,7 +6,7 @@ import { Login } from "../pages/Login";
 
 export function UserLayout() {
   const { role } = useContext(GlobalContext);
-  const content = ["admin", "employer"].includes(role) ? <Outlet /> : <Login />
+  const content = ["admin", "employer" ].includes(role) ? <Outlet /> : <Login />
 
   return (
     <>

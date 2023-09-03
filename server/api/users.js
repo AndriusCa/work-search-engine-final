@@ -9,7 +9,6 @@ users.get("/", async (req, res) => {
                             FROM users INNER JOIN roles ON roles.id = users.role_id;`;
     const selectRes = await connection.execute(selectQuery);
     const users = selectRes[0];
-    console.log(users);
 
     return res.status(200).json({
       status: "ok",

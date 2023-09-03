@@ -1,6 +1,98 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { GlobalContext } from "../context/GlobalContext";
 
 export function Header() {
+  const {
+    role,
+    updateEmail,
+    updateFullname,
+    updateLoginStatus,
+    updateRole,
+  } = useContext(GlobalContext);
+
+  const navigate = useNavigate();
+
+  // const ctx = useContext(GlobalContext);
+
+  function logMeOut() {
+    fetch("http://localhost:3001/api/logout", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      credentials: "include",
+    })
+      .then(() => {
+        updateLoginStatus(false);
+        updateEmail("");
+        updateFullname("");
+        updateRole("public");
+        navigate("/");
+      })
+      .catch(console.error);
+    }
+  
+
+  const publicLinks = 
+    <>
+      <div className="dropdown text-end">
+        <div className="text-end">
+          <Link to="Login" className="btn btn-primary me-2">
+            Prisijungti
+          </Link>
+          <Link to="Register" className="btn btn-primary">
+            Registruotis
+          </Link>
+        </div>
+      </div>
+    </>
+  
+   const adminLinks = (
+     <>
+       <div className="dropdown text-end">
+         <div className="text-end">
+           <Link to="/dashboard" className="btn btn-primary me-2">
+             Dashboard
+           </Link>
+           <Link to="/users" className="btn btn-primary me-2">
+             Users
+           </Link>
+           <Link to="/job-types" className="btn btn-primary me-2">
+             Job types
+           </Link>
+           <button onClick={logMeOut} className="btn btn-primary" type="button">
+             Atsijungti
+           </button>
+         </div>
+       </div>
+     </>
+   )
+  
+  const employerLinks = 
+    <>
+      <div className="dropdown text-end">
+        <div className="text-end">
+          <Link to="/dashboard" className="btn btn-primary me-2">
+            Dashboard
+          </Link>
+          <button onClick={logMeOut} className="btn btn-primary" type="button">
+            Atsijungti
+          </button>
+        </div>
+      </div>
+    </>
+  
+  let extraLinks = <></>;
+  if (role === "admin") {
+    extraLinks = adminLinks;
+  } else if (role === "employer") {
+    extraLinks = employerLinks;
+  } else {
+    extraLinks = publicLinks
+  }
+
+  
   return (
     <>
       <header className="p-3 mb-3 border-bottom">
@@ -10,7 +102,6 @@ export function Header() {
               to="/"
               className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none"
             ></Link>
-
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <li>
                 <Link to="/" className="nav-link px-2 link-secondary">
@@ -40,16 +131,7 @@ export function Header() {
                 autoComplete="on"
               />
             </form>
-            <div className="dropdown text-end">
-              <div className="text-end">
-                <Link to="Login" className="btn btn-primary me-2">
-                  Prisijungti
-                </Link>
-                <Link to="Register" className="btn btn-primary">
-                  Registruotis
-                </Link>
-              </div>
-            </div>
+            <div>{extraLinks}</div>
           </div>
         </div>
       </header>
