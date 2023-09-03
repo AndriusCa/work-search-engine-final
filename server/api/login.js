@@ -1,12 +1,12 @@
-import { randomUUID } from "crypto";
-import express from "express";
-import { connection } from "../setupDb.js";
-import { hash } from "../lib/hash.js";
+import { randomUUID } from "crypto"
+import express from "express"
+import { connection } from "../setupDb.js"
+import { hash } from "../lib/hash.js"
 
 export const login = express.Router()
 
 login.post("/", async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
 
   try {
     const selectQuery = `SELECT users.id, users.fullname, users.email, users.is_blocked, roles.role FROM users
@@ -16,7 +16,8 @@ login.post("/", async (req, res) => {
       email,
       hash(password),
     ])
-    const users = selectRes[0]
+    const users = selectRes[0];
+    
 
     if (users.length === 0) {
       return res.status(200).json({
@@ -25,19 +26,13 @@ login.post("/", async (req, res) => {
       })
     }
 
-    const userObj = users[0]
-
-    if (userObj.is_blocked) {
-      return res.status(200).json({
-        status: "err",
-        msg: "User is blocked.",
-      })
-    }
-
     const token = randomUUID()
 
     const insertQuery = `INSERT INTO tokens (token, user_id) VALUES (?, ?)`
-    const insertRes = await connection.execute(insertQuery, [token, userObj.id])
+    const insertRes = await connection.execute(insertQuery, [
+      token,
+      users[0].id,
+    ])
     const insertResObject = insertRes[0]
 
     if (insertResObject.insertId > 0) {
@@ -51,6 +46,7 @@ login.post("/", async (req, res) => {
         "HttpOnly",
       ]
 
+      const userObj = users[0]
       delete userObj.id
 
       return res.status(200).set("Set-Cookie", cookie.join("; ")).json({
@@ -73,12 +69,11 @@ login.post("/", async (req, res) => {
 })
 
 login.get("/", async (req, res) => {
-  const { jobsToken } = req.cookies
-
+  const { jobsToken } = req.cookies;
   if (!jobsToken) {
     return res.status(200).json({
       status: "err",
-      msg: "You are nor logged in.",
+      msg: "You are not logged in.",
     })
   }
 
@@ -88,7 +83,7 @@ login.get("/", async (req, res) => {
                             INNER JOIN roles ON users.role_id = roles.id
                             WHERE token = ?;`
     const selectRes = await connection.execute(selectQuery, [jobsToken])
-    const users = selectRes[0]
+    const users = selectRes[0];
 
     if (users.length === 0) {
       const cookie = [
@@ -100,6 +95,7 @@ login.get("/", async (req, res) => {
         "SameSite=Lax",
         "HttpOnly",
       ]
+
       return res.status(200).set("Set-Cookie", cookie.join("; ")).json({
         status: "ok",
         msg: "Session deleted",
