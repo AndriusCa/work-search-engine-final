@@ -34,10 +34,13 @@ export function Header() {
     }
   
 
-  const publicLinks = 
+  const publicLinks = (
     <>
       <div className="dropdown text-end">
         <div className="text-end">
+          <Link to="List" className="btn btn-primary me-2">
+            List
+          </Link>
           <Link to="Login" className="btn btn-primary me-2">
             Prisijungti
           </Link>
@@ -47,6 +50,7 @@ export function Header() {
         </div>
       </div>
     </>
+  )
   
    const adminLinks = (
      <>
@@ -57,6 +61,9 @@ export function Header() {
            </Link>
            <Link to="/users" className="btn btn-primary me-2">
              Users
+           </Link>
+           <Link to="/jobs" className="btn btn-primary me-2">
+             Jobs
            </Link>
            <Link to="/job-types" className="btn btn-primary me-2">
              Job types
@@ -69,12 +76,15 @@ export function Header() {
      </>
    )
   
-  const employerLinks = 
+  const employerLinks = (
     <>
       <div className="dropdown text-end">
         <div className="text-end">
           <Link to="/dashboard" className="btn btn-primary me-2">
             Dashboard
+          </Link>
+          <Link to="/jobs" className="btn btn-primary me-2">
+            Jobs
           </Link>
           <button onClick={logMeOut} className="btn btn-primary" type="button">
             Atsijungti
@@ -82,6 +92,7 @@ export function Header() {
         </div>
       </div>
     </>
+  )
   
   let extraLinks = <></>;
   if (role === "admin") {

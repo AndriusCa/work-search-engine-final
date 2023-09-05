@@ -9,11 +9,13 @@ export const initialContext = {
   updateFullname: () => {},
   email: "",
   updateEmail: () => {},
-  jobTypes: "",
+  jobTypes: [],
   addJobType: () => {},
   deleteJobType: () => { },
   editJobType: () => { },
-  updateJobTypes: () => {},
+  updateJobTypes: () => { },
+  jobs: [],
+  updateCars: () => { },
 }
 
 export const GlobalContext = createContext(initialContext);
@@ -25,6 +27,7 @@ export const ContextWrapper = (props) => {
   const [fullname, setFullname] = useState(initialContext.fullname);
   const [email, setEmail] = useState(initialContext.email);
   const [jobTypes, setJobTypes] = useState(initialContext.jobTypes);
+  const [jobs, setJobs] = useState(initialContext.jobTypes)
 
   // user busena: role, email,...
   useEffect(() => {
@@ -104,6 +107,10 @@ export const ContextWrapper = (props) => {
     setJobTypes(pre => pre.map(title => title === oldJobType ? newJobType : title));
   }
 
+  function updateJobs(jobs) {
+    setJobs(jobs);
+  }
+
   const value = {
     loginStatus,
     updateLoginStatus,
@@ -117,7 +124,9 @@ export const ContextWrapper = (props) => {
     addJobType,
     deleteJobType,
     editJobType,
-    updateJobTypes
+    updateJobTypes,
+    jobs,
+    updateJobs
   }
 
   return (

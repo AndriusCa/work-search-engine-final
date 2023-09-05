@@ -15,10 +15,9 @@ login.post("/", async (req, res) => {
     const selectRes = await connection.execute(selectQuery, [
       email,
       hash(password),
-    ])
+    ]);
     const users = selectRes[0];
     
-
     if (users.length === 0) {
       return res.status(200).json({
         status: "err",
@@ -26,14 +25,24 @@ login.post("/", async (req, res) => {
       })
     }
 
-    const token = randomUUID()
+    const userObj = users[0];
+
+    if (userObj.is_blocked) {
+      return res.status(200).json({
+        status: "err",
+        msg: "User is blocked.",
+      })
+    }
+
+    const token = randomUUID();
 
     const insertQuery = `INSERT INTO tokens (token, user_id) VALUES (?, ?)`
     const insertRes = await connection.execute(insertQuery, [
       token,
-      users[0].id,
+      userObj.id,
     ])
     const insertResObject = insertRes[0]
+
 
     if (insertResObject.insertId > 0) {
       const cookie = [
@@ -46,7 +55,6 @@ login.post("/", async (req, res) => {
         "HttpOnly",
       ]
 
-      const userObj = users[0]
       delete userObj.id
 
       return res.status(200).set("Set-Cookie", cookie.join("; ")).json({

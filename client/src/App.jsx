@@ -13,6 +13,7 @@ import { AdminJobsTypes } from './pages/job-types/AdminJobsTypes';
 import { AdminNewJobType } from "./pages/job-types/AdminNewJobType";
 import { AdminEditJobType } from "./pages/job-types/AdminEditJobType";
 import { Users } from "./pages/Users/Users";
+import { Jobs } from "./pages/jobs/Jobs";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               element={<AdminEditJobType />}
             ></Route>
             <Route path="/users" element={<Users />}></Route>
+            <Route path="/jobs" element={<Jobs />}></Route>
           </Route>
           <Route Component={PublicLayout}>
             <Route path="*" element={<Page404 />}></Route>

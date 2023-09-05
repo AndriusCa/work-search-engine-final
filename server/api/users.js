@@ -25,7 +25,6 @@ users.get("/", async (req, res) => {
 users.put("/:email", async (req, res) => {
   const { email } = req.params;
   const { newStatus } = req.body;
-  console.log(email, newStatus);
 
   if (!email || newStatus === undefined) {
     return res.status(400).json({
