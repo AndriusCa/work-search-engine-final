@@ -13,8 +13,6 @@ export function Header() {
 
   const navigate = useNavigate();
 
-  // const ctx = useContext(GlobalContext);
-
   function logMeOut() {
     fetch("http://localhost:3001/api/logout", {
       method: "GET",
@@ -38,9 +36,6 @@ export function Header() {
     <>
       <div className="dropdown text-end">
         <div className="text-end">
-          <Link to="List" className="btn btn-primary me-2">
-            List
-          </Link>
           <Link to="Login" className="btn btn-primary me-2">
             Prisijungti
           </Link>
