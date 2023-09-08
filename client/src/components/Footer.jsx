@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 
+
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <div className="container">
       <footer className="py-5">
@@ -85,8 +88,10 @@ export function Footer() {
             </form>
           </div>
         </div>
-        <div className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-          <p>Visos teisės saugomos © 2023</p>
+        <div
+          className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top"
+        >
+          <p>Visos teisės saugomos © {currentYear}</p>
         </div>
       </footer>
     </div>
