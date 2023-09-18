@@ -49,7 +49,7 @@ jobTypes.post("/", async (req, res) => {
     console.log(error)
     return res.status(500).json({
       status: "err",
-      msg: "POST: CAR TYPES API - server error.",
+      msg: "POST: JOB TYPES API - server error.",
     })
   }
 });
@@ -69,7 +69,7 @@ jobTypes.get("/", async (req, res) => {
     console.log(error)
     return res.status(500).json({
       status: "err",
-      msg: "GET: CAR TYPES API - server error.",
+      msg: "GET: JOB TYPES API - server error.",
     })
   }
 });
