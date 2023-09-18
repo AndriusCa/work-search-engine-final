@@ -6,7 +6,6 @@ export const register = express.Router()
 
 register.post("/", async (req, res) => {
   const { fullname, email, password } = req.body;
-  console.log(fullname, email, password)
 
   try {
     const selectQuery = `SELECT * FROM users WHERE email = ?;`;

@@ -1,9 +1,9 @@
-import { randomUUID } from "crypto"
-import express from "express"
-import { connection } from "../setupDb.js"
-import { hash } from "../lib/hash.js"
+import { randomUUID } from "crypto";
+import express from "express";
+import { connection } from "../setupDb.js";
+import { hash } from "../lib/hash.js";
 
-export const login = express.Router()
+export const login = express.Router();
 
 login.post("/", async (req, res) => {
   const { email, password } = req.body;

@@ -15,7 +15,8 @@ export const initialContext = {
   editJobType: () => { },
   updateJobTypes: () => { },
   jobs: [],
-  updateCars: () => { },
+  updateJobs: () => { },
+  steeringWheelSides: [],
 }
 
 export const GlobalContext = createContext(initialContext);
@@ -27,7 +28,10 @@ export const ContextWrapper = (props) => {
   const [fullname, setFullname] = useState(initialContext.fullname);
   const [email, setEmail] = useState(initialContext.email);
   const [jobTypes, setJobTypes] = useState(initialContext.jobTypes);
-  const [jobs, setJobs] = useState(initialContext.jobTypes)
+  const [jobs, setJobs] = useState(initialContext.jobs);
+  const [steeringWheelSides, setSteeringWheelSides] = useState(
+    initialContext.steeringWheelSides
+  )
 
   // user busena: role, email,...
   useEffect(() => {
@@ -39,8 +43,8 @@ export const ContextWrapper = (props) => {
       },
       credentials: "include",
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (data.status === "ok" && data.user) {
           setLoginStatus(true);
           setRole(data.user.role);
@@ -62,14 +66,32 @@ export const ContextWrapper = (props) => {
       },
       credentials: "include",
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (data.status === "ok" && data.list) {
           setJobTypes(data.list.map(t => t.title));
         }
       })
       .catch(console.error);
   }, []);
+
+  // Pradinis vairo poziciju masyvas
+    useEffect(() => {
+        fetch('http://localhost:3001/api/data/steering-wheel-sides', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+            credentials: 'include',
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok' && data.list) {
+                    setSteeringWheelSides(data.list.map(t => t.side));
+                }
+            })
+            .catch(console.error);
+    }, []);
   
 
   function updateLoginStatus(status) {
@@ -111,6 +133,8 @@ export const ContextWrapper = (props) => {
     setJobs(jobs);
   }
 
+
+
   const value = {
     loginStatus,
     updateLoginStatus,
@@ -126,7 +150,8 @@ export const ContextWrapper = (props) => {
     editJobType,
     updateJobTypes,
     jobs,
-    updateJobs
+    updateJobs,
+    steeringWheelSides,
   }
 
   return (

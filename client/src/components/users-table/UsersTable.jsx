@@ -76,7 +76,7 @@ export function UsersTable() {
             <th scope="col">El. pašto adresas</th>
             <th scope="col">Rolė</th>
             <th scope="col">Statusas</th>
-            <th scope="col">Ar registruotas</th>
+            <th scope="col">Registruotas</th>
             <th className="text-end" scope="col">
               Veiksmas
             </th>

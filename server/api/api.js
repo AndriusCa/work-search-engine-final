@@ -19,7 +19,7 @@ api.all("/", (req, res) => {
 api.use("/register", register);
 api.use("/login", login);
 api.use("/logout", logout);
-api.use("/job-types", jobTypes)
+api.use("/job-types", jobTypes);
 api.use("/users", users);
 api.use("/jobs", jobs);
 api.use("/data", data);

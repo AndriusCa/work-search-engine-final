@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import { SERVER_PORT } from "./env.js";
 import { api } from "./api/api.js";
+import { connection } from "../server/setupDb.js";
 
 const app = express();
 
@@ -26,6 +27,41 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.disable("x-powered-by")
 
 app.use(express.static('public'));
+
+//esmine informacija apie requesta padariusi klienta
+app.use(async (req, res, next) => {
+  const { jobsToken } = req.cookies; //pasiimi cookie jeigu turi varianta ka galbut zinos apie useri
+
+  req.user = {
+    id: -1,
+    role: "public",
+    isBlocked: false,
+  };  //uzsisetini defaultini statini  
+
+  if (!jobsToken) {
+    return next();
+  }  // jeigu cookie neturi ties tuo ir baigi darba
+
+  try {
+    const selectQuery = `SELECT users.id, users.is_blocked, roles.role FROM tokens
+                            INNER JOIN users ON tokens.user_id = users.id
+                            INNER JOIN roles ON roles.id = users.role_id
+                            WHERE token = ?;`
+    const selectRes = await connection.execute(selectQuery, [jobsToken])
+    const tokens = selectRes[0]; //pasiselektinam viska kas aktualu apie ta cookie 
+
+    if (tokens.length === 1) {
+      req.user.id = tokens[0].id;
+      req.user.isBlocked = tokens[0].is_blocked;
+      req.user.role = tokens[0].role; //jeigu yra cookie tai atnaujinam req.user
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+  next();
+})
+
 
 app.use('/api', api);
 

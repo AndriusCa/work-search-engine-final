@@ -1,7 +1,7 @@
 import express from "express";
 import { connection } from "../setupDb.js";
 
-export const jobTypes = express.Router()
+export const jobTypes = express.Router();
 
 jobTypes.post("/", async (req, res) => {
   const { title } = req.body;

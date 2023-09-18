@@ -175,7 +175,6 @@ jobs.get("/", async (req, res) => {
 
 jobs.get("/:jobId", async (req, res) => {
   const { jobId } = req.params;
-  console.log(jobId);
 
   try {
     const selectQuery = `SELECT jobs.id, jobs.title, \`job-types\`.title as jobType, jobs.image, jobs.price, jobs.color, jobs.location, \`steering-wheel\`.side as steeringWheel

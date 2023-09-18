@@ -6,11 +6,11 @@ export function JobTypesTable() {
   const { jobTypes, deleteJobType } = useContext(GlobalContext);
 
   /*
-GET: http/api/car-types                                                         ['type1', 'type2', 'type3']
-GET: http/api/car-types/pavadinimas                                             {title: type1, size: 5, color: red}
-DELETE: http/api/car-types/pavadinimas
-POST: http/api/car-types + {title: type1, size: 5, color: red}
-PUT:  http/api/car-types/pavadinimas + {title: type1, size: 5, color: red}
+GET: http/api/job-types                                                         ['type1', 'type2', 'type3']
+GET: http/api/job-types/pavadinimas                                             {title: type1, size: 5, color: red}
+DELETE: http/api/job-types/pavadinimas
+POST: http/api/job-types + {title: type1, size: 5, color: red}
+PUT:  http/api/job-types/pavadinimas + {title: type1, size: 5, color: red}
 */
 
   function deleteJobTypeHandler(title) {

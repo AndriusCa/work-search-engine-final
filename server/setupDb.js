@@ -23,9 +23,9 @@ async function setupDb() {
     await rolesTable(connection);
     await usersTable(connection);
     await tokensTable(connection);
-    await jobTypesTable(connection);
+    await jobTypesTable(connection); 
     await steeringWheelTable(connection);
-    await carsTable(connection);
+    await jobsTable(connection);
 
     // Uzpildome informacija
     await generateRoles(connection);
@@ -123,12 +123,12 @@ async function steeringWheelTable(db) {
   }
 }
 
-async function carsTable(db) {
+async function jobsTable(db) {
   try {
-    const sql = `CREATE TABLE cars (
+    const sql = `CREATE TABLE jobs (
                         id int(10) NOT NULL AUTO_INCREMENT,
                         user_id int(10) NOT NULL,
-                        car_type_id int(10) NOT NULL,
+                        job_type_id int(10) NOT NULL,
                         title varchar(200) NOT NULL,
                         color varchar(50) NOT NULL,
                         price int(6) unsigned NOT NULL DEFAULT 0,
@@ -140,15 +140,15 @@ async function carsTable(db) {
                         created timestamp NOT NULL DEFAULT current_timestamp(),
                         PRIMARY KEY (id),
                         KEY user_id (user_id),
-                        KEY car_type_id (car_type_id),
+                        KEY job_type_id (job_type_id),
                         KEY steering_wheel_id (steering_wheel_id),
-                        CONSTRAINT cars_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id),
-                        CONSTRAINT cars_ibfk_2 FOREIGN KEY (steering_wheel_id) REFERENCES \`steering-wheel\` (id),
-                        CONSTRAINT cars_ibfk_3 FOREIGN KEY (car_type_id) REFERENCES \`job-types\` (id)
+                        CONSTRAINT jobs_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id),
+                        CONSTRAINT jobs_ibfk_2 FOREIGN KEY (steering_wheel_id) REFERENCES \`steering-wheel\` (id),
+                        CONSTRAINT jobs_ibfk_3 FOREIGN KEY (job_type_id) REFERENCES \`job-types\` (id)
                     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4`
     await db.execute(sql)
   } catch (error) {
-    console.log('Nepavyko sukurti "cars" lenteles')
+    console.log('Nepavyko sukurti "jobs" lenteles')
     console.log(error)
     throw error
   }
@@ -219,7 +219,7 @@ async function generateSteeringWheel(db) {
     console.log('Nepavyko sugeneruoti "streering-wheel" lenteles turinio')
     console.log(error)
     throw error
-  }
+  };
 }
 
 export const connection = await setupDb();
